@@ -2,7 +2,6 @@ package dota2
 
 import (
 	"errors"
-	"log"
 
 	"github.com/baldurstod/vdf"
 )
@@ -17,31 +16,15 @@ var prefabs = createItems()
 func InitItems(buf []byte) error {
 	vdf := vdf.VDF{}
 	root := vdf.Parse(buf)
-	//log.Println(root.Get("DOTAHeroes"))
 	itemsGame, err := root.Get("items_game")
 	if err != nil {
 		return err
 	}
 
-	log.Println(itemsGame)
-	/*items, err := itemsGame.Get("items")*/
 	err = initItems(itemsGame)
 	if err != nil {
 		return err
 	}
-	/*
-		if err != nil {
-			return err
-		}
-
-		for _, hero := range heroes.GetChilds() {
-			if strings.HasPrefix(hero.Key, "npc_") {
-				addHero(hero)
-			}
-		}
-
-		//log.Println(heroes)
-	/*/
 	return nil
 }
 
@@ -105,4 +88,14 @@ func GetPrefab(index string) (*Item, error) {
 
 func GetItems() map[string]*Item {
 	return items
+}
+
+func GetBaseItems(hero string) []*Item {
+	i := make([]*Item, 0, 10)
+	for _, item := range items {
+		if item.BaseItem && item.IsUsedByHero(hero) {
+			i = append(i, item)
+		}
+	}
+	return i
 }

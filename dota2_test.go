@@ -3,10 +3,7 @@ package dota2_test
 import (
 	"log"
 	"os"
-	"path"
 	"testing"
-
-	"encoding/json"
 
 	"github.com/baldurstod/go-dota2"
 )
@@ -44,8 +41,10 @@ func TestItems(t *testing.T) {
 		return
 	}
 
-	j, _ := json.MarshalIndent(dota2.GetItems(), "", "\t")
+	//j, _ := json.MarshalIndent(dota2.GetItems(), "", "\t")
 	//g.Println(string(j[:]))
-	os.WriteFile(path.Join(varFolder, "items.json"), j, 0666)
+	//os.WriteFile(path.Join(varFolder, "items.json"), j, 0666)
+
+	log.Println(dota2.GetBaseItems("npc_dota_hero_dark_willow"))
 
 }

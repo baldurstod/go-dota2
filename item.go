@@ -121,6 +121,11 @@ func (i *Item) MarshalJSON() ([]byte, error) {
 	return json.Marshal(ret)
 }
 
+func (i *Item) IsUsedByHero(hero string) bool {
+	_, ok := i.UsedByHeroes[hero]
+	return ok
+}
+
 /*
 "prefab"		"ancient"
 "prefab"		"announcer"
