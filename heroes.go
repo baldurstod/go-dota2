@@ -2,7 +2,6 @@ package dota2
 
 import (
 	"errors"
-	"log"
 	"strings"
 
 	"github.com/baldurstod/vdf"
@@ -40,7 +39,6 @@ func addHero(datas *vdf.KeyValue) (*Hero, error) {
 	hero.initFromData(datas)
 
 	heroes[hero.entity] = hero
-	log.Println(hero)
 
 	return hero, nil
 }

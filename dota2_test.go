@@ -1,6 +1,7 @@
 package dota2_test
 
 import (
+	"encoding/json"
 	"log"
 	"os"
 	"testing"
@@ -42,9 +43,7 @@ func TestItems(t *testing.T) {
 	}
 
 	//j, _ := json.MarshalIndent(dota2.GetItems(), "", "\t")
-	//g.Println(string(j[:]))
+	j, _ := json.MarshalIndent(dota2.GetBaseItems("npc_dota_hero_dark_willow"), "", "\t")
+	log.Println(string(j[:]))
 	//os.WriteFile(path.Join(varFolder, "items.json"), j, 0666)
-
-	log.Println(dota2.GetBaseItems("npc_dota_hero_dark_willow"))
-
 }
