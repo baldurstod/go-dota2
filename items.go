@@ -3,16 +3,16 @@ package dota2
 import (
 	"errors"
 	"log"
-	"strconv"
 
 	"github.com/baldurstod/vdf"
 )
 
-func createItems() map[int]*Item {
-	return map[int]*Item{}
+func createItems() map[string]*Item {
+	return map[string]*Item{}
 }
 
 var items = createItems()
+var prefabs = createItems()
 
 func InitItems(buf []byte) error {
 	vdf := vdf.VDF{}
@@ -46,45 +46,63 @@ func InitItems(buf []byte) error {
 }
 
 func initItems(datas *vdf.KeyValue) error {
-	items, err := datas.Get("items")
+	prefabsVdf, err := datas.Get("prefabs")
 	if err != nil {
 		return err
 	}
 
-	for _, item := range items.GetChilds() {
-		_, err = addItem(item)
+	for _, prefabVdf := range prefabsVdf.GetChilds() {
+		prefab, err := addItem(prefabVdf)
 		if err != nil {
 			return err
 		}
+
+		prefabs[prefab.Index] = prefab
+	}
+
+	itemsVdf, err := datas.Get("items")
+	if err != nil {
+		return err
+	}
+
+	for _, itemVdf := range itemsVdf.GetChilds() {
+		item, err := addItem(itemVdf)
+		if err != nil {
+			return err
+		}
+
+		items[item.Index] = item
 	}
 	return nil
 }
 
 func addItem(datas *vdf.KeyValue) (*Item, error) {
-	index, err := strconv.Atoi(datas.Key)
+
+	item := NewItem(datas.Key)
+	err := item.initFromData(datas)
 	if err != nil {
 		return nil, err
 	}
-
-	item := NewItem(index)
-	err = item.initFromData(datas)
-	if err != nil {
-		return nil, err
-	}
-
-	items[index] = item
 
 	return item, nil
 }
 
-func GetIndex(index int) (*Item, error) {
+func GetItem(index string) (*Item, error) {
 	h, ok := items[index]
 	if !ok {
-		return nil, errors.New("item not found " + strconv.Itoa(index))
+		return nil, errors.New("item not found " + index)
 	}
 	return h, nil
 }
 
-func GetItems() map[int]*Item {
+func GetPrefab(index string) (*Item, error) {
+	h, ok := prefabs[index]
+	if !ok {
+		return nil, errors.New("prefab not found " + index)
+	}
+	return h, nil
+}
+
+func GetItems() map[string]*Item {
 	return items
 }
