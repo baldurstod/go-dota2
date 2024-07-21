@@ -8,15 +8,16 @@ import (
 )
 
 type Item struct {
-	Index        string
-	Name         string
-	ItemName     string
-	ItemClass    string
-	ItemTypeName string
-	ItemSlot     string
-
-	ModelPlayer string
-	Prefab      string
+	Index          string
+	Name           string
+	ItemName       string
+	ItemClass      string
+	ItemTypeName   string
+	ItemSlot       string
+	ModelPlayer    string
+	ImageInventory string
+	Prefab         string
+	BaseItem       bool
 }
 
 func NewItem(index string) *Item {
@@ -44,6 +45,7 @@ func (i *Item) initFromData(data *vdf.KeyValue) error {
 	}
 
 	i.ModelPlayer, _ = data.GetString("model_player")
+	i.ImageInventory, _ = data.GetString("image_inventory")
 
 	if i.ItemClass, err = data.GetString("item_class"); err != nil {
 		if prefab != nil {
@@ -69,21 +71,28 @@ func (i *Item) initFromData(data *vdf.KeyValue) error {
 		}
 	}
 
+	if i.BaseItem, err = data.GetBool("baseitem"); err != nil {
+		if prefab != nil {
+			i.BaseItem = prefab.BaseItem
+		}
+	}
+
 	return nil
 }
 
 func (i *Item) MarshalJSON() ([]byte, error) {
 	ret := make(map[string]interface{})
 
-	ret["Index"] = i.Index
-	ret["Name"] = i.Name
-	ret["ItemName"] = i.ItemName
-	ret["ItemClass"] = i.ItemClass
-	ret["ItemTypeName"] = i.ItemTypeName
-	ret["ItemSlot"] = i.ItemSlot
+	ret["index"] = i.Index
+	ret["name"] = i.Name
+	ret["item_name"] = i.ItemName
+	ret["item_class"] = i.ItemClass
+	ret["item_type_name"] = i.ItemTypeName
+	ret["item_slot"] = i.ItemSlot
+	ret["base_item"] = i.BaseItem
 
 	if i.ModelPlayer != "" {
-		ret["ModelPlayer"] = i.ModelPlayer
+		ret["model_player"] = i.ModelPlayer
 	}
 
 	return json.Marshal(ret)
