@@ -52,3 +52,7 @@ func GetHero(entity string) (*Hero, error) {
 	}
 	return h, nil
 }
+
+func GetHeroes() map[string]*Hero {
+	return heroes
+}

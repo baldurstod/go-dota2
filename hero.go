@@ -45,7 +45,17 @@ func (h *Hero) initFromData(data *vdf.KeyValue) error {
 			}
 			h.Personas = append(h.Personas, persona)
 		}
-		//log.Println(personas)
+	}
+
+	if slots, err := data.Get("ItemSlots"); err == nil {
+		for _, p := range slots.GetChilds() {
+			itemSlot := ItemSlot{}
+			err = itemSlot.initFromData(p)
+			if err != nil {
+				return fmt.Errorf("error while initializing persona: <%w>", err)
+			}
+			h.ItemSlots = append(h.ItemSlots, itemSlot)
+		}
 	}
 
 	return nil
