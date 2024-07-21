@@ -18,11 +18,13 @@ type Item struct {
 	ImageInventory string
 	Prefab         string
 	BaseItem       bool
+	UsedByHeroes   map[string]struct{}
 }
 
 func NewItem(index string) *Item {
 	return &Item{
-		Index: index,
+		Index:        index,
+		UsedByHeroes: make(map[string]struct{}),
 	}
 }
 
@@ -77,6 +79,14 @@ func (i *Item) initFromData(data *vdf.KeyValue) error {
 		}
 	}
 
+	if usedByHeroes, err := data.Get("used_by_heroes"); err == nil {
+		for _, hero := range usedByHeroes.GetChilds() {
+			if b, _ := hero.ToBool(); b {
+				i.UsedByHeroes[hero.Key] = struct{}{}
+			}
+		}
+	}
+
 	return nil
 }
 
@@ -89,10 +99,23 @@ func (i *Item) MarshalJSON() ([]byte, error) {
 	ret["item_class"] = i.ItemClass
 	ret["item_type_name"] = i.ItemTypeName
 	ret["item_slot"] = i.ItemSlot
-	ret["base_item"] = i.BaseItem
+	if i.BaseItem {
+		ret["base_item"] = i.BaseItem
+	}
 
 	if i.ModelPlayer != "" {
 		ret["model_player"] = i.ModelPlayer
+	}
+
+	if len(i.UsedByHeroes) > 0 {
+		usedByHeroes := make(map[string]interface{})
+
+		for hero := range i.UsedByHeroes {
+			usedByHeroes[hero] = true
+		}
+
+		ret["used_by_heroes"] = usedByHeroes
+
 	}
 
 	return json.Marshal(ret)
