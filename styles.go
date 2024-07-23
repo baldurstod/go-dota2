@@ -15,22 +15,13 @@ func NewStyles() *Styles {
 }
 
 func (s *Styles) initFromData(data *vdf.KeyValue) error {
-	/*
-		for _, child := range data.GetChilds() {
-			switch child.Key {
-			case "skip_model_combine":
-				v.SkipModelCombine, _ = child.ToBool()
-			case "skin":
-				v.Skin, _ = child.ToInt()
-			default:
-				if strings.HasPrefix(child.Key, "asset_modifier") {
-					vis := Visual{}
-					vis.initFromData(child)
-					v.Visuals = append(v.Visuals, &vis)
-				} else {
-					return errors.New("unknown key " + child.Key)
-				}
-			}
-		}*/
+	for _, child := range data.GetChilds() {
+		style := Style{}
+		err := style.initFromData(child)
+		if err != nil {
+			return err
+		}
+		s.Styles = append(s.Styles, &style)
+	}
 	return nil
 }

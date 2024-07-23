@@ -38,7 +38,10 @@ func (v *Visuals) initFromData(data *vdf.KeyValue) error {
 		case "skin":
 			v.Skin, _ = child.ToInt()
 		case "styles":
-			v.Styles.initFromData(child)
+			err := v.Styles.initFromData(child)
+			if err != nil {
+				return err
+			}
 		case "alternate_icons":
 			//TODO
 		case "animation_modifiers":
