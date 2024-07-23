@@ -19,12 +19,14 @@ type Item struct {
 	Prefab         string
 	BaseItem       bool
 	UsedByHeroes   map[string]struct{}
+	Visuals        *Visuals
 }
 
 func NewItem(index string) *Item {
 	return &Item{
 		Index:        index,
 		UsedByHeroes: make(map[string]struct{}),
+		Visuals:      NewVisuals(),
 	}
 }
 
@@ -84,6 +86,13 @@ func (i *Item) initFromData(data *vdf.KeyValue) error {
 			if b, _ := hero.ToBool(); b {
 				i.UsedByHeroes[hero.Key] = struct{}{}
 			}
+		}
+	}
+
+	if visuals, err := data.Get("visuals"); err == nil {
+		err = i.Visuals.initFromData(visuals)
+		if err != nil {
+			return err
 		}
 	}
 
