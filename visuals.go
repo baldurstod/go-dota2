@@ -8,7 +8,7 @@ import (
 )
 
 type Visuals struct {
-	Visuals                      []*Visual
+	AssetModifiers               []*AssetModifier
 	Styles                       *Styles
 	SkipModelCombine             bool
 	HideStylesFromUI             bool
@@ -19,8 +19,8 @@ type Visuals struct {
 
 func NewVisuals() *Visuals {
 	return &Visuals{
-		Visuals: make([]*Visual, 0),
-		Styles:  NewStyles(),
+		AssetModifiers: make([]*AssetModifier, 0),
+		Styles:         NewStyles(),
 	}
 }
 
@@ -50,9 +50,9 @@ func (v *Visuals) initFromData(data *vdf.KeyValue) error {
 			//TODO
 		default:
 			if strings.HasPrefix(child.Key, "asset_modifier") {
-				vis := Visual{}
-				vis.initFromData(child)
-				v.Visuals = append(v.Visuals, &vis)
+				am := AssetModifier{}
+				am.initFromData(child)
+				v.AssetModifiers = append(v.AssetModifiers, &am)
 			} else {
 				return errors.New("unknown key " + child.Key)
 			}
