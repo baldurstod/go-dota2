@@ -1,32 +1,30 @@
 package dota2
 
 import (
-	"encoding/json"
 	"errors"
 
 	"github.com/baldurstod/vdf"
 )
 
 type Item struct {
-	Index          string
-	Name           string
-	ItemName       string
-	ItemClass      string
-	ItemTypeName   string
-	ItemSlot       string
-	ModelPlayer    string
-	ImageInventory string
-	Prefab         string
-	BaseItem       bool
-	UsedByHeroes   map[string]struct{}
-	Visuals        *Visuals
+	Index          string          `json:"index,omitempty"`
+	Name           string          `json:"name,omitempty"`
+	ItemName       string          `json:"item_name,omitempty"`
+	ItemClass      string          `json:"item_class,omitempty"`
+	ItemTypeName   string          `json:"item_type_name,omitempty"`
+	ItemSlot       string          `json:"item_slot,omitempty"`
+	ModelPlayer    string          `json:"model_player,omitempty"`
+	ImageInventory string          `json:"image_inventory,omitempty"`
+	Prefab         string          `json:"prefab,omitempty"`
+	BaseItem       bool            `json:"base_item,omitempty"`
+	UsedByHeroes   map[string]bool `json:"used_by_heroes,omitempty"`
+	Visuals        *Visuals        `json:"visuals,omitempty"`
 }
 
 func NewItem(index string) *Item {
 	return &Item{
 		Index:        index,
-		UsedByHeroes: make(map[string]struct{}),
-		Visuals:      NewVisuals(),
+		UsedByHeroes: make(map[string]bool),
 	}
 }
 
@@ -84,12 +82,13 @@ func (i *Item) initFromData(data *vdf.KeyValue) error {
 	if usedByHeroes, err := data.Get("used_by_heroes"); err == nil {
 		for _, hero := range usedByHeroes.GetChilds() {
 			if b, _ := hero.ToBool(); b {
-				i.UsedByHeroes[hero.Key] = struct{}{}
+				i.UsedByHeroes[hero.Key] = true
 			}
 		}
 	}
 
 	if visuals, err := data.Get("visuals"); err == nil {
+		i.Visuals = NewVisuals()
 		err = i.Visuals.initFromData(visuals)
 		if err != nil {
 			return err
@@ -99,6 +98,7 @@ func (i *Item) initFromData(data *vdf.KeyValue) error {
 	return nil
 }
 
+/*
 func (i *Item) MarshalJSON() ([]byte, error) {
 	ret := make(map[string]interface{})
 
@@ -124,11 +124,14 @@ func (i *Item) MarshalJSON() ([]byte, error) {
 		}
 
 		ret["used_by_heroes"] = usedByHeroes
+	}
 
+	if i.Visuals != nil {
+		ret["visuals"] = i.Visuals
 	}
 
 	return json.Marshal(ret)
-}
+}*/
 
 func (i *Item) IsUsedByHero(hero string) bool {
 	_, ok := i.UsedByHeroes[hero]
