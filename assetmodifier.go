@@ -5,9 +5,9 @@ import (
 )
 
 type AssetModifier struct {
-	Type     string
-	Modifier string
-	Asset    string
+	Type     string `json:"type,omitempty"`
+	Modifier string `json:"modifier,omitempty"`
+	Asset    string `json:"asset,omitempty"`
 }
 
 func (am *AssetModifier) initFromData(data *vdf.KeyValue) error {

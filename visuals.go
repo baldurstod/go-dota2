@@ -8,19 +8,18 @@ import (
 )
 
 type Visuals struct {
-	AssetModifiers               []*AssetModifier
-	Styles                       *Styles
-	SkipModelCombine             bool
-	HideStylesFromUI             bool
-	HideOnPortrait               bool
-	OnlyDisplayOnHeroModelChange bool
-	Skin                         int
+	AssetModifiers               []*AssetModifier `json:"asset_modifiers,omitempty"`
+	Styles                       *Styles          `json:"styles,omitempty"`
+	SkipModelCombine             bool             `json:"skip_model_combine,omitempty"`
+	HideStylesFromUI             bool             `json:"hide_styles_from_ui,omitempty"`
+	HideOnPortrait               bool             `json:"hide_on_portrait,omitempty"`
+	OnlyDisplayOnHeroModelChange bool             `json:"only_display_on_hero_model_change,omitempty"`
+	Skin                         int              `json:"skin,omitempty"`
 }
 
 func NewVisuals() *Visuals {
 	return &Visuals{
 		AssetModifiers: make([]*AssetModifier, 0),
-		Styles:         NewStyles(),
 	}
 }
 
@@ -38,6 +37,7 @@ func (v *Visuals) initFromData(data *vdf.KeyValue) error {
 		case "skin":
 			v.Skin, _ = child.ToInt()
 		case "styles":
+			v.Styles = NewStyles()
 			err := v.Styles.initFromData(child)
 			if err != nil {
 				return err
@@ -60,3 +60,25 @@ func (v *Visuals) initFromData(data *vdf.KeyValue) error {
 	}
 	return nil
 }
+
+/*
+func (v *Visuals) MarshalJSON() ([]byte, error) {
+	ret := make(map[string]interface{})
+
+	ret["skip_model_combine"] = v.SkipModelCombine
+	ret["hide_styles_from_ui"] = v.HideStylesFromUI
+	ret["hide_on_portrait"] = v.HideOnPortrait
+	ret["only_display_on_hero_model_change"] = v.OnlyDisplayOnHeroModelChange
+	ret["skin"] = v.Skin
+
+	if len(v.AssetModifiers) > 0 {
+		ret["asset_modifiers"] = v.AssetModifiers
+	}
+
+	if len(v.Styles.Styles) > 0 {
+		ret["styles"] = v.Styles
+	}
+
+	return json.Marshal(ret)
+}
+*/
