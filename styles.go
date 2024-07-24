@@ -16,12 +16,12 @@ func NewStyles() *Styles {
 
 func (s *Styles) initFromData(data *vdf.KeyValue) error {
 	for _, child := range data.GetChilds() {
-		style := Style{}
+		style := NewStyle()
 		err := style.initFromData(child)
 		if err != nil {
 			return err
 		}
-		s.Styles = append(s.Styles, &style)
+		s.Styles = append(s.Styles, style)
 	}
 	return nil
 }
