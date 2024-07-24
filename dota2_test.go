@@ -47,3 +47,29 @@ func TestItems(t *testing.T) {
 	log.Println(string(j[:]))
 	//os.WriteFile(path.Join(varFolder, "items.json"), j, 0666)
 }
+
+func TestAssetModifiers(t *testing.T) {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
+	buf, err := os.ReadFile(varFolder + "items_game.txt")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	err = dota2.InitItems(buf)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	//j, _ := json.MarshalIndent(dota2.GetBaseItems("npc_dota_hero_dark_willow"), "", "\t")
+	//log.Println(string(j[:]))
+	item, err := dota2.GetItem("5156")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if item != nil {
+		log.Println(item.GetAssetModifiers(1))
+	}
+}

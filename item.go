@@ -98,6 +98,21 @@ func (i *Item) initFromData(data *vdf.KeyValue) error {
 	return nil
 }
 
+func (i *Item) GetAssetModifiers(style int) []*AssetModifier {
+	modifiers := make([]*AssetModifier, 0)
+
+	if i.Visuals != nil {
+		for _, modifier := range i.Visuals.AssetModifiers {
+			if modifier.Style == style {
+				modifiers = append(modifiers, modifier)
+
+			}
+		}
+	}
+
+	return modifiers
+}
+
 /*
 func (i *Item) MarshalJSON() ([]byte, error) {
 	ret := make(map[string]interface{})
