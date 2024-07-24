@@ -38,7 +38,7 @@ func addHero(datas *vdf.KeyValue) (*Hero, error) {
 	hero := NewHero(datas.Key)
 	hero.initFromData(datas)
 
-	heroes[hero.entity] = hero
+	heroes[hero.Entity] = hero
 
 	return hero, nil
 }

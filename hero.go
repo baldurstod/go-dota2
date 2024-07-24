@@ -9,7 +9,7 @@ import (
 )
 
 type Hero struct {
-	entity      string
+	Entity      string
 	Name        string
 	HeroID      int
 	HeroOrderID int
@@ -20,7 +20,7 @@ type Hero struct {
 
 func NewHero(entity string) *Hero {
 	return &Hero{
-		entity:    entity,
+		Entity:    entity,
 		Personas:  make([]Persona, 0),
 		ItemSlots: make([]ItemSlot, 0, 5),
 	}
