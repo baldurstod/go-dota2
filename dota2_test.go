@@ -9,17 +9,49 @@ import (
 	"github.com/baldurstod/go-dota2"
 )
 
-func DisabledTestHeroes(t *testing.T) {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
+func initHeroes() error {
+	buf, err := os.ReadFile(varFolder + "npc_heroes.txt")
+	if err != nil {
+		return err
+	}
+	err = dota2.InitHeroes(buf)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func initItems() error {
+	buf, err := os.ReadFile(varFolder + "items_game.txt")
+	if err != nil {
+		return err
+	}
+	err = dota2.InitItems(buf)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func initAll() error {
+	if err := initHeroes(); err != nil {
+		return err
+	}
+	if err := initItems(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func TestHeroes(t *testing.T) {
 	log.Println("start heroes")
 
-	buf, err := os.ReadFile(varFolder + "npc_heroes.txt")
+	err := initHeroes()
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	log.Println("start parse")
-	dota2.InitHeroes(buf)
 	log.Println("end heroes")
 
 	//j, _ := json.MarshalIndent(dota2.GetHeroes(), "", "\t")
@@ -29,15 +61,7 @@ func DisabledTestHeroes(t *testing.T) {
 }
 
 func TestItems(t *testing.T) {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
-
-	buf, err := os.ReadFile(varFolder + "items_game.txt")
-	if err != nil {
-		t.Error(err)
-		return
-	}
-	err = dota2.InitItems(buf)
-	if err != nil {
+	if err := initItems(); err != nil {
 		t.Error(err)
 		return
 	}
@@ -49,15 +73,7 @@ func TestItems(t *testing.T) {
 }
 
 func TestAssetModifiers(t *testing.T) {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
-
-	buf, err := os.ReadFile(varFolder + "items_game.txt")
-	if err != nil {
-		t.Error(err)
-		return
-	}
-	err = dota2.InitItems(buf)
-	if err != nil {
+	if err := initItems(); err != nil {
 		t.Error(err)
 		return
 	}
@@ -72,4 +88,22 @@ func TestAssetModifiers(t *testing.T) {
 	if item != nil {
 		log.Println(item.GetAssetModifiers(1))
 	}
+}
+
+func TestHeroItems(t *testing.T) {
+	if err := initAll(); err != nil {
+		t.Error(err)
+		return
+	}
+
+	h, err := dota2.GetHero("npc_dota_hero_dragon_knight")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	items := h.GetItems(0)
+	j, _ := json.MarshalIndent(items, "", "\t")
+	log.Println(string(j[:]))
+
 }
