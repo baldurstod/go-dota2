@@ -15,14 +15,14 @@ type Hero struct {
 	HeroOrderID int
 	Model       string
 	Personas    []Persona
-	ItemSlots   []ItemSlot
+	ItemSlots   map[string]ItemSlot
 }
 
 func NewHero(entity string) *Hero {
 	return &Hero{
 		Entity:    entity,
 		Personas:  make([]Persona, 0),
-		ItemSlots: make([]ItemSlot, 0, 5),
+		ItemSlots: make(map[string]ItemSlot),
 	}
 }
 
@@ -54,7 +54,7 @@ func (h *Hero) initFromData(data *vdf.KeyValue) error {
 			if err != nil {
 				return fmt.Errorf("error while initializing persona: <%w>", err)
 			}
-			h.ItemSlots = append(h.ItemSlots, itemSlot)
+			h.ItemSlots[itemSlot.SlotName] = itemSlot
 		}
 	}
 
