@@ -76,6 +76,37 @@ func (h *Hero) String() string {
 	return sb.String()
 }
 
+// Get items for the selected persona. base hero = 0
+func (h *Hero) GetItems(persona int) []*Item {
+	if persona > len(h.Personas) {
+		persona = 0
+	}
+	var exist bool
+
+	ret := make([]*Item, 0, 5)
+	items, exist := itemsPerHero[h.Entity]
+	if !exist {
+		return ret
+	}
+
+	var slot ItemSlot
+	for _, item := range items {
+		if slot, exist = h.ItemSlots[item.ItemSlot]; !exist {
+			continue
+		}
+
+		if !slot.IsPersonaSlot(persona) {
+			continue
+		}
+
+		if item.BaseItem {
+			ret = append(ret, item)
+		}
+	}
+
+	return ret
+}
+
 /*
 	//=================================================================================================================
 	// HERO: Base

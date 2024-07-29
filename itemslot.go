@@ -41,6 +41,14 @@ func (is *ItemSlot) String() string {
 	return sb.String()
 }
 
+func (is *ItemSlot) IsPersonaSlot(persona int) bool {
+	if persona == 0 {
+		return !strings.Contains(is.SlotName, "persona_")
+	} else {
+		return strings.HasSuffix(is.SlotName, "persona_"+strconv.Itoa(persona))
+	}
+}
+
 /*
 	"0"
 	{

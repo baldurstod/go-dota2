@@ -11,6 +11,7 @@ func createItems() map[string]*Item {
 }
 
 var items = createItems()
+var itemsPerHero = func() map[string][]*Item { return make(map[string][]*Item) }()
 var prefabs = createItems()
 
 func InitItems(buf []byte) error {
@@ -65,6 +66,16 @@ func addItem(datas *vdf.KeyValue) (*Item, error) {
 	err := item.initFromData(datas)
 	if err != nil {
 		return nil, err
+	}
+
+	for npc, used := range item.UsedByHeroes {
+		if used {
+			arr, exist := itemsPerHero[npc]
+			if !exist {
+				arr = make([]*Item, 0, 100)
+			}
+			itemsPerHero[npc] = append(arr, item)
+		}
 	}
 
 	return item, nil

@@ -2,6 +2,8 @@ package dota2
 
 import (
 	"errors"
+	"strconv"
+	"strings"
 
 	"github.com/baldurstod/vdf"
 )
@@ -151,6 +153,10 @@ func (i *Item) MarshalJSON() ([]byte, error) {
 func (i *Item) IsUsedByHero(hero string) bool {
 	_, ok := i.UsedByHeroes[hero]
 	return ok
+}
+
+func (i *Item) IsPersonaItem(id int) bool {
+	return strings.Contains(i.ItemSlot, "persona_"+strconv.Itoa(id))
 }
 
 /*
