@@ -107,5 +107,33 @@ func TestHeroItems(t *testing.T) {
 	items := h.GetItems()
 	j, _ := json.MarshalIndent(items, "", "\t")
 	log.Println(string(j[:]))
+}
 
+func TestHeroModel(t *testing.T) {
+	if err := initAll(); err != nil {
+		t.Error(err)
+		return
+	}
+
+	h, err := dota2.GetHero("npc_dota_hero_crystal_maiden")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	m1 := h.GetModel()
+	h.EquipItem("19205") // cm persona
+	m2 := h.GetModel()
+
+	if m1 != "models/heroes/crystal_maiden/crystal_maiden.vmdl" {
+		t.Error("wrong hero model")
+		return
+	}
+
+	if m1 != " models/heroes/crystal_maiden_persona/crystal_maiden_persona.vmdl" {
+		t.Error("wrong hero model")
+		return
+	}
+
+	log.Println(m1, m2)
 }

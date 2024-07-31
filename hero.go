@@ -32,7 +32,7 @@ func (h *Hero) EquipItem(index string) error {
 func (h *Hero) GetModel() string {
 	model := h.template.model
 
-	for _, item := range h.GetItems() {
+	for _, item := range h.items {
 		for _, modifier := range item.GetAssetModifiers(0) {
 			if modifier.Type == MODIFIER_ENTITY_MODEL && modifier.Asset == h.template.entity {
 				model = modifier.Modifier
