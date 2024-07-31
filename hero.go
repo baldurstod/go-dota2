@@ -1,5 +1,7 @@
 package dota2
 
+import "errors"
+
 type Hero struct {
 	template *HeroTemplate
 	items    map[string]*Item
@@ -21,6 +23,10 @@ func (h *Hero) EquipItem(index string) error {
 	var err error
 	if item, err = GetItem(index); err != nil {
 		return err
+	}
+
+	if !item.IsUsedByHero(h.template.entity) {
+		return errors.New("item is not equipable by this hero")
 	}
 
 	h.items[item.ItemSlot] = item

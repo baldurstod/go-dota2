@@ -109,6 +109,24 @@ func TestHeroItems(t *testing.T) {
 	log.Println(string(j[:]))
 }
 
+func TestWrongHero(t *testing.T) {
+	if err := initAll(); err != nil {
+		t.Error(err)
+		return
+	}
+
+	h, err := dota2.GetHero("npc_dota_hero_antimage")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	if err = h.EquipItem("19205"); err == nil { // try to equip Conduit of the Blueheart
+		t.Error("EquipItem should return an error")
+		return
+	}
+}
+
 func TestHeroModel(t *testing.T) {
 	if err := initAll(); err != nil {
 		t.Error(err)
