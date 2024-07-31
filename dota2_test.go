@@ -102,7 +102,7 @@ func TestHeroItems(t *testing.T) {
 		return
 	}
 
-	items := h.GetItems(0)
+	items := h.GetItems()
 	j, _ := json.MarshalIndent(items, "", "\t")
 	log.Println(string(j[:]))
 

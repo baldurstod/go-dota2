@@ -7,11 +7,7 @@ import (
 	"github.com/baldurstod/vdf"
 )
 
-func createHeroes() map[string]*Hero {
-	return map[string]*Hero{}
-}
-
-var heroes = createHeroes()
+var heroes = func() map[string]*HeroTemplate { return map[string]*HeroTemplate{} }()
 
 func InitHeroes(buf []byte) error {
 	vdf := vdf.VDF{}
@@ -25,7 +21,7 @@ func InitHeroes(buf []byte) error {
 
 	for _, hero := range heroes.GetChilds() {
 		if strings.HasPrefix(hero.Key, "npc_") {
-			addHero(hero)
+			addHeroTemplate(hero)
 		}
 	}
 
@@ -34,23 +30,26 @@ func InitHeroes(buf []byte) error {
 	return nil
 }
 
-func addHero(datas *vdf.KeyValue) (*Hero, error) {
-	hero := NewHero(datas.Key)
+func addHeroTemplate(datas *vdf.KeyValue) (*HeroTemplate, error) {
+	hero := newHeroTemplate(datas.Key)
 	hero.initFromData(datas)
 
-	heroes[hero.Entity] = hero
+	heroes[hero.entity] = hero
 
 	return hero, nil
 }
 
 func GetHero(entity string) (*Hero, error) {
-	h, ok := heroes[entity]
+	template, ok := heroes[entity]
 	if !ok {
 		return nil, errors.New("hero not found " + entity)
 	}
-	return h, nil
+
+	return newHero(template), nil
 }
 
-func GetHeroes() map[string]*Hero {
+/*
+func GetHeroes() map[string]*HeroTemplate {
 	return heroes
 }
+*/
