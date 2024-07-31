@@ -13,7 +13,7 @@ type Hero struct {
 	Name        string
 	HeroID      int
 	HeroOrderID int
-	Model       string
+	model       string
 	Personas    []Persona
 	ItemSlots   map[string]ItemSlot
 }
@@ -28,7 +28,7 @@ func NewHero(entity string) *Hero {
 
 func (h *Hero) initFromData(data *vdf.KeyValue) error {
 	var err error
-	if h.Model, err = data.GetString("Model"); err != nil {
+	if h.model, err = data.GetString("Model"); err != nil {
 		return err
 	}
 
@@ -64,7 +64,7 @@ func (h *Hero) initFromData(data *vdf.KeyValue) error {
 func (h *Hero) String() string {
 	var sb strings.Builder
 
-	sb.WriteString("Model: " + h.Model + "\n")
+	sb.WriteString("Model: " + h.model + "\n")
 	sb.WriteString("HeroID " + strconv.Itoa(h.HeroID) + "\n")
 
 	for _, p := range h.Personas {
@@ -74,6 +74,28 @@ func (h *Hero) String() string {
 	//Personas
 
 	return sb.String()
+}
+
+// Get hero model for the selected persona. base hero = 0
+func (h *Hero) GetModel(persona int) string {
+	model := h.model
+	for _, item := range h.GetItems(persona) {
+		for _, modifier := range item.GetAssetModifiers(0) {
+			if modifier.Type == MODIFIER_ENTITY_MODEL && modifier.Asset == h.Entity {
+				model = modifier.Modifier
+			}
+		}
+	}
+	/*
+		"asset_modifier"
+		{
+			"type"		"entity_model"
+			"asset"		"npc_dota_hero_crystal_maiden"
+			"modifier"		"models/heroes/crystal_maiden_persona/crystal_maiden_persona.vmdl"
+		}
+	*/
+
+	return model
 }
 
 // Get items for the selected persona. base hero = 0

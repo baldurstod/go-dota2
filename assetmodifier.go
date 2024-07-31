@@ -18,3 +18,12 @@ func (am *AssetModifier) initFromData(data *vdf.KeyValue) error {
 	am.Style, _ = data.GetInt("style")
 	return nil
 }
+
+const (
+	MODIFIER_UNKNOWN             = ""
+	MODIFIER_ENTITY_MODEL        = "entity_model"
+	MODIFIER_PARTICLE            = "particle"
+	MODIFIER_PARTICLE_CREATE     = "particle_create"
+	MODIFIER_PARTICLE_SNAPSHOT   = "particle_snapshot"
+	MODIFIER_ADDITIONAl_WEARABLE = "additional_wearable"
+)
