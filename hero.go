@@ -2,13 +2,13 @@ package dota2
 
 type Hero struct {
 	template *HeroTemplate
-	Items    map[string]*Item
+	items    map[string]*Item
 }
 
 func newHero(template *HeroTemplate) *Hero {
 	return &Hero{
 		template: template,
-		Items:    make(map[string]*Item),
+		items:    make(map[string]*Item),
 	}
 }
 
@@ -16,9 +16,22 @@ func (h *Hero) GetEntity() string {
 	return h.template.entity
 }
 
+func (h *Hero) EquipItem(index string) error {
+	var item *Item
+	var err error
+	if item, err = GetItem(index); err != nil {
+		return err
+	}
+
+	h.items[item.ItemSlot] = item
+
+	return nil
+}
+
 // Get hero model for the selected persona. base hero = 0
 func (h *Hero) GetModel() string {
 	model := h.template.model
+
 	for _, item := range h.GetItems() {
 		for _, modifier := range item.GetAssetModifiers(0) {
 			if modifier.Type == MODIFIER_ENTITY_MODEL && modifier.Asset == h.template.entity {
@@ -39,25 +52,44 @@ func (h *Hero) GetModel() string {
 }
 
 func (h *Hero) GetItems() []*Item {
+	//itemsPerPersona := map[int][]*Item{0: make([]*Item, 0)}
+	persona := 0
+	if item, ok := h.items["persona_selector"]; ok {
+		if id := item.GetPersonaId(); id >= 0 {
+			persona = id
+		}
+
+	}
+
 	var exist bool
 
 	ret := make([]*Item, 0, 5)
-	//items, exist := itemsPerHero[h.template.entity]
+	items, exist := itemsPerHero[h.template.entity]
 	if !exist {
 		return ret
 	}
-	/*
-		var slot ItemSlot
-		for _, item := range items {
-			if slot, exist = h.ItemSlots[item.ItemSlot]; !exist {
-				continue
-			}
 
-			if item.BaseItem {
-				ret = append(ret, item)
-			}
+	var slot ItemSlot
+	for _, item := range items {
+		if !item.BaseItem {
+			continue
 		}
-	*/
+
+		if _, exist = h.items[item.ItemSlot]; exist {
+			continue
+		}
+
+		if slot, exist = h.template.itemSlots[item.ItemSlot]; !exist {
+			continue
+		}
+
+		if !slot.IsPersonaSlot(persona) {
+			continue
+		}
+
+		ret = append(ret, item)
+
+	}
 
 	return ret
 }

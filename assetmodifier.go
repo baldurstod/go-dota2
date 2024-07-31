@@ -9,6 +9,7 @@ type AssetModifier struct {
 	Modifier string `json:"modifier,omitempty"`
 	Asset    string `json:"asset,omitempty"`
 	Style    int    `json:"style,omitempty"`
+	Persona  int    `json:"persona,omitempty"`
 }
 
 func (am *AssetModifier) initFromData(data *vdf.KeyValue) error {
@@ -16,6 +17,7 @@ func (am *AssetModifier) initFromData(data *vdf.KeyValue) error {
 	am.Modifier, _ = data.GetString("modifier")
 	am.Asset, _ = data.GetString("asset")
 	am.Style, _ = data.GetInt("style")
+	am.Persona, _ = data.GetInt("persona")
 	return nil
 }
 
@@ -26,4 +28,5 @@ const (
 	MODIFIER_PARTICLE_CREATE     = "particle_create"
 	MODIFIER_PARTICLE_SNAPSHOT   = "particle_snapshot"
 	MODIFIER_ADDITIONAl_WEARABLE = "additional_wearable"
+	MODIFIER_PERSONA             = "persona"
 )

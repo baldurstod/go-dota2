@@ -23,7 +23,7 @@ type Item struct {
 	Visuals        *Visuals        `json:"visuals,omitempty"`
 }
 
-func NewItem(index string) *Item {
+func newItem(index string) *Item {
 	return &Item{
 		Index:        index,
 		UsedByHeroes: make(map[string]bool),
@@ -157,6 +157,18 @@ func (i *Item) IsUsedByHero(hero string) bool {
 
 func (i *Item) IsPersonaItem(id int) bool {
 	return strings.Contains(i.ItemSlot, "persona_"+strconv.Itoa(id))
+}
+
+// Return the persona id for items having a "persona_selector" slot
+func (i *Item) GetPersonaId() int {
+	id := -1
+
+	for _, modifier := range i.GetAssetModifiers(0) {
+		if modifier.Type == MODIFIER_PERSONA {
+			id = modifier.Persona
+		}
+	}
+	return id
 }
 
 /*

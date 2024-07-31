@@ -36,6 +36,10 @@ func (h *HeroTemplate) initFromData(data *vdf.KeyValue) error {
 		return err
 	}
 
+	if h.heroOrderID, err = data.GetInt("HeroOrderID"); err != nil {
+		return err
+	}
+
 	if personas, err := data.Get("Persona"); err == nil {
 		for _, p := range personas.GetChilds() {
 			persona := Persona{}

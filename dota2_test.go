@@ -96,11 +96,13 @@ func TestHeroItems(t *testing.T) {
 		return
 	}
 
-	h, err := dota2.GetHero("npc_dota_hero_dragon_knight")
+	h, err := dota2.GetHero("npc_dota_hero_crystal_maiden")
 	if err != nil {
 		t.Error(err)
 		return
 	}
+
+	//h.EquipItem("19205")
 
 	items := h.GetItems()
 	j, _ := json.MarshalIndent(items, "", "\t")

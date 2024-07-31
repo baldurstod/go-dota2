@@ -62,7 +62,7 @@ func initItems(datas *vdf.KeyValue) error {
 
 func addItem(datas *vdf.KeyValue) (*Item, error) {
 
-	item := NewItem(datas.Key)
+	item := newItem(datas.Key)
 	err := item.initFromData(datas)
 	if err != nil {
 		return nil, err
