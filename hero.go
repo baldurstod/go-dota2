@@ -64,7 +64,6 @@ func (h *Hero) GetItems() []*Item {
 		if id := item.GetPersonaId(); id >= 0 {
 			persona = id
 		}
-
 	}
 
 	var exist bool
@@ -73,6 +72,10 @@ func (h *Hero) GetItems() []*Item {
 	items, exist := itemsPerHero[h.template.entity]
 	if !exist {
 		return ret
+	}
+
+	for _, item := range h.items {
+		ret = append(ret, item)
 	}
 
 	var slot ItemSlot
