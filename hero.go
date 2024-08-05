@@ -18,20 +18,20 @@ func (h *Hero) GetEntity() string {
 	return h.template.entity
 }
 
-func (h *Hero) EquipItem(index string) error {
+func (h *Hero) EquipItem(index string) (*item, error) {
 	var item *item
 	var err error
 	if item, err = CreateItem(index); err != nil {
-		return err
+		return nil, err
 	}
 
 	if !item.IsUsedByHero(h.template.entity) {
-		return errors.New("item is not equipable by this hero")
+		return nil, errors.New("item is not equipable by this hero")
 	}
 
 	h.items[item.GetItemSlot()] = item
 
-	return nil
+	return item, nil
 }
 
 // Get hero model for the selected persona. base hero = 0
