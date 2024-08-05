@@ -67,7 +67,7 @@ func (v *Visuals) getSkin(style int) int {
 			return skin
 		}
 	}
-	return 0
+	return v.Skin
 }
 
 /*

@@ -71,7 +71,7 @@ func TestItems(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	printHeroItems(h)
+	printHero(h)
 }
 
 func TestAssetModifiers(t *testing.T) {
@@ -105,12 +105,13 @@ func TestHeroItems(t *testing.T) {
 		return
 	}
 
-	printHeroItems(h)
+	printHero(h)
 	h.EquipItem("19205")
-	printHeroItems(h)
+	printHero(h)
 }
 
-func printHeroItems(h *dota2.Hero) {
+func printHero(h *dota2.Hero) {
+	log.Println(h.GetModel())
 	for _, item := range h.GetItems() {
 		log.Println(item.GetName(), item.GetSkin())
 	}
@@ -180,7 +181,7 @@ func TestItemSkin(t *testing.T) {
 		t.Error(err)
 		return
 	}
+	printHero(h)
 	item.Style = 1
-
-	printHeroItems(h)
+	printHero(h)
 }
