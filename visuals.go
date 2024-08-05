@@ -61,6 +61,15 @@ func (v *Visuals) initFromData(data *vdf.KeyValue) error {
 	return nil
 }
 
+func (v *Visuals) getSkin(style int) int {
+	if v.Styles != nil {
+		if skin, err := v.Styles.getSkin(style); err == nil {
+			return skin
+		}
+	}
+	return 0
+}
+
 /*
 func (v *Visuals) MarshalJSON() ([]byte, error) {
 	ret := make(map[string]interface{})

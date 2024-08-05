@@ -177,6 +177,23 @@ func (i *ItemTemplate) GetPersonaId() int {
 	return id
 }
 
+func (i *ItemTemplate) GetSkin(style int) int {
+	skin := 0
+
+	if i.Visuals != nil {
+		skin = i.Visuals.getSkin(style)
+	}
+	/*
+
+		for _, modifier := range i.GetAssetModifiers(0) {
+			if modifier.Type == MODIFIER_PERSONA {
+				skin = modifier.Persona
+			}
+		}
+	*/
+	return skin
+}
+
 /*
 "prefab"		"ancient"
 "prefab"		"announcer"

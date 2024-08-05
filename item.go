@@ -38,3 +38,7 @@ func (item *item) GetAssetModifiers(style int) []*AssetModifier {
 func (item *item) GetPersonaId() int {
 	return item.template.GetPersonaId()
 }
+
+func (item *item) GetSkin() int {
+	return item.template.GetSkin(item.Style)
+}

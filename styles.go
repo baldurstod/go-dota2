@@ -1,6 +1,8 @@
 package dota2
 
 import (
+	"errors"
+
 	"github.com/baldurstod/vdf"
 )
 
@@ -24,4 +26,12 @@ func (s *Styles) initFromData(data *vdf.KeyValue) error {
 		s.Styles = append(s.Styles, style)
 	}
 	return nil
+}
+
+func (s *Styles) getSkin(style int) (int, error) {
+	if style < 0 || style > len(s.Styles) {
+		return 0, errors.New("out of bounds")
+	}
+
+	return s.Styles[style].Skin, nil
 }

@@ -1,7 +1,6 @@
 package dota2_test
 
 import (
-	"encoding/json"
 	"log"
 	"os"
 	"testing"
@@ -72,9 +71,7 @@ func TestItems(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	for _, item := range h.GetItems() {
-		log.Println(item.GetName())
-	}
+	printHeroItems(h)
 }
 
 func TestAssetModifiers(t *testing.T) {
@@ -108,11 +105,15 @@ func TestHeroItems(t *testing.T) {
 		return
 	}
 
-	//h.EquipItem("19205")
+	printHeroItems(h)
+	h.EquipItem("19205")
+	printHeroItems(h)
+}
 
-	items := h.GetItems()
-	j, _ := json.MarshalIndent(items, "", "\t")
-	log.Println(string(j[:]))
+func printHeroItems(h *dota2.Hero) {
+	for _, item := range h.GetItems() {
+		log.Println(item.GetName(), item.GetSkin())
+	}
 }
 
 func TestWrongHero(t *testing.T) {
@@ -127,7 +128,7 @@ func TestWrongHero(t *testing.T) {
 		return
 	}
 
-	if err = h.EquipItem("19205"); err == nil { // try to equip Conduit of the Blueheart
+	if _, err = h.EquipItem("19205"); err == nil { // try to equip Conduit of the Blueheart
 		t.Error("EquipItem should return an error")
 		return
 	}
@@ -154,10 +155,32 @@ func TestHeroModel(t *testing.T) {
 		return
 	}
 
-	if m1 != " models/heroes/crystal_maiden_persona/crystal_maiden_persona.vmdl" {
+	if m2 != "models/heroes/crystal_maiden_persona/crystal_maiden_persona.vmdl" {
 		t.Error("wrong hero model")
 		return
 	}
 
 	log.Println(m1, m2)
+}
+
+func TestItemSkin(t *testing.T) {
+	if err := initAll(); err != nil {
+		t.Error(err)
+		return
+	}
+
+	h, err := dota2.GetHero("npc_dota_hero_ogre_magi")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	item, err := h.EquipItem("13670")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	item.Style = 1
+
+	printHeroItems(h)
 }
