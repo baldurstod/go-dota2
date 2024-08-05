@@ -81,7 +81,7 @@ func addItemTemplate(datas *vdf.KeyValue) (*ItemTemplate, error) {
 	return item, nil
 }
 
-func CreateItem(index string) (*Item, error) {
+func CreateItem(index string) (*item, error) {
 	t, ok := items[index]
 	if !ok {
 		return nil, errors.New("item not found " + index)

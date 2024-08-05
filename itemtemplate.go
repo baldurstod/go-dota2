@@ -30,6 +30,12 @@ func newItemTemplate(index string) *ItemTemplate {
 	}
 }
 
+func (i *ItemTemplate) CreateItem() *item {
+	return &item{
+		template: i,
+	}
+}
+
 func (i *ItemTemplate) initFromData(data *vdf.KeyValue) error {
 	var err error
 	var prefab *ItemTemplate

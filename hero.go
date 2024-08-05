@@ -4,13 +4,13 @@ import "errors"
 
 type Hero struct {
 	template *HeroTemplate
-	items    map[string]*Item
+	items    map[string]*item
 }
 
 func newHero(template *HeroTemplate) *Hero {
 	return &Hero{
 		template: template,
-		items:    make(map[string]*Item),
+		items:    make(map[string]*item),
 	}
 }
 
@@ -19,7 +19,7 @@ func (h *Hero) GetEntity() string {
 }
 
 func (h *Hero) EquipItem(index string) error {
-	var item *Item
+	var item *item
 	var err error
 	if item, err = CreateItem(index); err != nil {
 		return err
@@ -57,8 +57,8 @@ func (h *Hero) GetModel() string {
 	return model
 }
 
-func (h *Hero) GetItems() []*Item {
-	//itemsPerPersona := map[int][]*Item{0: make([]*Item, 0)}
+func (h *Hero) GetItems() []*item {
+	//itemsPerPersona := map[int][]*item{0: make([]*item, 0)}
 	persona := 0
 	if item, ok := h.items["persona_selector"]; ok {
 		if id := item.GetPersonaId(); id >= 0 {
@@ -68,7 +68,7 @@ func (h *Hero) GetItems() []*Item {
 
 	var exist bool
 
-	ret := make([]*Item, 0, 5)
+	ret := make([]*item, 0, 5)
 	items, exist := itemsPerHero[h.template.entity]
 	if !exist {
 		return ret
