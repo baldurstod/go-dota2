@@ -6,12 +6,12 @@ import (
 	"github.com/baldurstod/vdf"
 )
 
-func createItems() map[string]*Item {
-	return map[string]*Item{}
+func createItems() map[string]*ItemTemplate {
+	return map[string]*ItemTemplate{}
 }
 
 var items = createItems()
-var itemsPerHero = func() map[string][]*Item { return make(map[string][]*Item) }()
+var itemsPerHero = func() map[string][]*ItemTemplate { return make(map[string][]*ItemTemplate) }()
 var prefabs = createItems()
 
 func InitItems(buf []byte) error {
@@ -36,7 +36,7 @@ func initItems(datas *vdf.KeyValue) error {
 	}
 
 	for _, prefabVdf := range prefabsVdf.GetChilds() {
-		prefab, err := addItem(prefabVdf)
+		prefab, err := addItemTemplate(prefabVdf)
 		if err != nil {
 			return err
 		}
@@ -50,7 +50,7 @@ func initItems(datas *vdf.KeyValue) error {
 	}
 
 	for _, itemVdf := range itemsVdf.GetChilds() {
-		item, err := addItem(itemVdf)
+		item, err := addItemTemplate(itemVdf)
 		if err != nil {
 			return err
 		}
@@ -60,9 +60,9 @@ func initItems(datas *vdf.KeyValue) error {
 	return nil
 }
 
-func addItem(datas *vdf.KeyValue) (*Item, error) {
+func addItemTemplate(datas *vdf.KeyValue) (*ItemTemplate, error) {
 
-	item := newItem(datas.Key)
+	item := newItemTemplate(datas.Key)
 	err := item.initFromData(datas)
 	if err != nil {
 		return nil, err
@@ -72,7 +72,7 @@ func addItem(datas *vdf.KeyValue) (*Item, error) {
 		if used {
 			arr, exist := itemsPerHero[npc]
 			if !exist {
-				arr = make([]*Item, 0, 100)
+				arr = make([]*ItemTemplate, 0, 100)
 			}
 			itemsPerHero[npc] = append(arr, item)
 		}
@@ -81,15 +81,16 @@ func addItem(datas *vdf.KeyValue) (*Item, error) {
 	return item, nil
 }
 
-func GetItem(index string) (*Item, error) {
-	h, ok := items[index]
+func CreateItem(index string) (*Item, error) {
+	t, ok := items[index]
 	if !ok {
 		return nil, errors.New("item not found " + index)
 	}
-	return h, nil
+
+	return newItem(t), nil
 }
 
-func GetPrefab(index string) (*Item, error) {
+func GetPrefab(index string) (*ItemTemplate, error) {
 	h, ok := prefabs[index]
 	if !ok {
 		return nil, errors.New("prefab not found " + index)
@@ -97,10 +98,11 @@ func GetPrefab(index string) (*Item, error) {
 	return h, nil
 }
 
-func GetItems() map[string]*Item {
+func GetItemTemplates() map[string]*ItemTemplate {
 	return items
 }
 
+/*
 func GetBaseItems(hero string) []*Item {
 	i := make([]*Item, 0, 10)
 	for _, item := range items {
@@ -110,3 +112,4 @@ func GetBaseItems(hero string) []*Item {
 	}
 	return i
 }
+*/

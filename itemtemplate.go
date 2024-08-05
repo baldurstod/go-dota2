@@ -8,7 +8,7 @@ import (
 	"github.com/baldurstod/vdf"
 )
 
-type Item struct {
+type ItemTemplate struct {
 	Index          string          `json:"index,omitempty"`
 	Name           string          `json:"name,omitempty"`
 	ItemName       string          `json:"item_name,omitempty"`
@@ -23,16 +23,16 @@ type Item struct {
 	Visuals        *Visuals        `json:"visuals,omitempty"`
 }
 
-func newItem(index string) *Item {
-	return &Item{
+func newItemTemplate(index string) *ItemTemplate {
+	return &ItemTemplate{
 		Index:        index,
 		UsedByHeroes: make(map[string]bool),
 	}
 }
 
-func (i *Item) initFromData(data *vdf.KeyValue) error {
+func (i *ItemTemplate) initFromData(data *vdf.KeyValue) error {
 	var err error
-	var prefab *Item
+	var prefab *ItemTemplate
 
 	if index, err := data.GetString("prefab"); err == nil {
 		prefab, err = GetPrefab(index)
@@ -100,7 +100,7 @@ func (i *Item) initFromData(data *vdf.KeyValue) error {
 	return nil
 }
 
-func (i *Item) GetAssetModifiers(style int) []*AssetModifier {
+func (i *ItemTemplate) GetAssetModifiers(style int) []*AssetModifier {
 	modifiers := make([]*AssetModifier, 0)
 
 	if i.Visuals != nil {
@@ -116,7 +116,7 @@ func (i *Item) GetAssetModifiers(style int) []*AssetModifier {
 }
 
 /*
-func (i *Item) MarshalJSON() ([]byte, error) {
+func (i *ItemTemplate) MarshalJSON() ([]byte, error) {
 	ret := make(map[string]interface{})
 
 	ret["index"] = i.Index
@@ -150,17 +150,17 @@ func (i *Item) MarshalJSON() ([]byte, error) {
 	return json.Marshal(ret)
 }*/
 
-func (i *Item) IsUsedByHero(hero string) bool {
+func (i *ItemTemplate) IsUsedByHero(hero string) bool {
 	_, ok := i.UsedByHeroes[hero]
 	return ok
 }
 
-func (i *Item) IsPersonaItem(id int) bool {
+func (i *ItemTemplate) IsPersonaItem(id int) bool {
 	return strings.Contains(i.ItemSlot, "persona_"+strconv.Itoa(id))
 }
 
 // Return the persona id for items having a "persona_selector" slot
-func (i *Item) GetPersonaId() int {
+func (i *ItemTemplate) GetPersonaId() int {
 	id := -1
 
 	for _, modifier := range i.GetAssetModifiers(0) {

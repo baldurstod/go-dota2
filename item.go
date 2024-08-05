@@ -1,18 +1,45 @@
 package dota2
 
-import "errors"
-
-type Hero struct {
-	template *HeroTemplate
-	items    map[string]*Item
+type Item struct {
+	template *ItemTemplate
+	style    int
 }
 
-func newHero(template *HeroTemplate) *Hero {
-	return &Hero{
+func newItem(template *ItemTemplate) *Item {
+	return &Item{
 		template: template,
-		items:    make(map[string]*Item),
 	}
 }
+
+func (item *Item) GetIndex() string {
+	return item.template.Index
+}
+
+func (item *Item) GetName() string {
+	return item.template.Name
+}
+
+func (item *Item) GetItemSlot() string {
+	return item.template.ItemSlot
+}
+
+func (item *Item) GetModelPlayer() string {
+	return item.template.ModelPlayer
+}
+
+func (item *Item) IsUsedByHero(hero string) bool {
+	return item.template.IsUsedByHero(hero)
+}
+
+func (item *Item) GetAssetModifiers(style int) []*AssetModifier {
+	return item.template.GetAssetModifiers(style)
+}
+
+func (item *Item) GetPersonaId() int {
+	return item.template.GetPersonaId()
+}
+
+/*
 
 func (h *Hero) GetEntity() string {
 	return h.template.entity
@@ -21,7 +48,7 @@ func (h *Hero) GetEntity() string {
 func (h *Hero) EquipItem(index string) error {
 	var item *Item
 	var err error
-	if item, err = CreateItem(index); err != nil {
+	if item, err = GetItem(index); err != nil {
 		return err
 	}
 
@@ -29,7 +56,7 @@ func (h *Hero) EquipItem(index string) error {
 		return errors.New("item is not equipable by this hero")
 	}
 
-	h.items[item.GetItemSlot()] = item
+	h.items[item.ItemSlot] = item
 
 	return nil
 }
@@ -45,14 +72,6 @@ func (h *Hero) GetModel() string {
 			}
 		}
 	}
-	/*
-		"asset_modifier"
-		{
-			"type"		"entity_model"
-			"asset"		"npc_dota_hero_crystal_maiden"
-			"modifier"		"models/heroes/crystal_maiden_persona/crystal_maiden_persona.vmdl"
-		}
-	*/
 
 	return model
 }
@@ -79,16 +98,16 @@ func (h *Hero) GetItems() []*Item {
 	}
 
 	var slot ItemSlot
-	for _, itemTemplate := range items {
-		if !itemTemplate.BaseItem {
+	for _, item := range items {
+		if !item.BaseItem {
 			continue
 		}
 
-		if _, exist = h.items[itemTemplate.ItemSlot]; exist {
+		if _, exist = h.items[item.ItemSlot]; exist {
 			continue
 		}
 
-		if slot, exist = h.template.itemSlots[itemTemplate.ItemSlot]; !exist {
+		if slot, exist = h.template.itemSlots[item.ItemSlot]; !exist {
 			continue
 		}
 
@@ -96,9 +115,10 @@ func (h *Hero) GetItems() []*Item {
 			continue
 		}
 
-		ret = append(ret, newItem(itemTemplate))
+		ret = append(ret, item)
 
 	}
 
 	return ret
 }
+*/

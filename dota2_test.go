@@ -61,15 +61,20 @@ func TestHeroes(t *testing.T) {
 }
 
 func TestItems(t *testing.T) {
-	if err := initItems(); err != nil {
+	if err := initAll(); err != nil {
 		t.Error(err)
 		return
 	}
 
-	//j, _ := json.MarshalIndent(dota2.GetItems(), "", "\t")
-	j, _ := json.MarshalIndent(dota2.GetBaseItems("npc_dota_hero_dark_willow"), "", "\t")
-	log.Println(string(j[:]))
-	//os.WriteFile(path.Join(varFolder, "items.json"), j, 0666)
+	var h *dota2.Hero
+	var err error
+	if h, err = dota2.GetHero("npc_dota_hero_dark_willow"); err != nil {
+		t.Error(err)
+		return
+	}
+	for _, item := range h.GetItems() {
+		log.Println(item.GetName())
+	}
 }
 
 func TestAssetModifiers(t *testing.T) {
@@ -80,12 +85,13 @@ func TestAssetModifiers(t *testing.T) {
 
 	//j, _ := json.MarshalIndent(dota2.GetBaseItems("npc_dota_hero_dark_willow"), "", "\t")
 	//log.Println(string(j[:]))
-	item, err := dota2.GetItem("5156")
+	item, err := dota2.CreateItem("5156")
 	if err != nil {
 		t.Error(err)
 		return
 	}
 	if item != nil {
+		log.Println(item.GetAssetModifiers(0))
 		log.Println(item.GetAssetModifiers(1))
 	}
 }
