@@ -31,8 +31,8 @@ func (item *item) IsUsedByHero(hero string) bool {
 	return item.template.IsUsedByHero(hero)
 }
 
-func (item *item) GetAssetModifiers(style int) []*AssetModifier {
-	return item.template.GetAssetModifiers(style)
+func (item *item) GetAssetModifiers() []*AssetModifier {
+	return item.template.GetAssetModifiers(item.Style)
 }
 
 func (item *item) GetPersonaId() int {

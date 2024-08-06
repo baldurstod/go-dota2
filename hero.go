@@ -34,12 +34,12 @@ func (h *Hero) EquipItem(index string) (*item, error) {
 	return item, nil
 }
 
-// Get hero model for the selected persona. base hero = 0
+// Get hero model depending on the equipped items
 func (h *Hero) GetModel() string {
 	model := h.template.model
 
 	for _, item := range h.items {
-		for _, modifier := range item.GetAssetModifiers(0) {
+		for _, modifier := range item.GetAssetModifiers() {
 			if modifier.Type == MODIFIER_ENTITY_MODEL && modifier.Asset == h.template.entity {
 				model = modifier.Modifier
 			}

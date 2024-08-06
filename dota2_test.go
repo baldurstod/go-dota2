@@ -88,8 +88,10 @@ func TestAssetModifiers(t *testing.T) {
 		return
 	}
 	if item != nil {
-		log.Println(item.GetAssetModifiers(0))
-		log.Println(item.GetAssetModifiers(1))
+		item.Style = 0
+		log.Println(item.GetAssetModifiers())
+		item.Style = 1
+		log.Println(item.GetAssetModifiers())
 	}
 }
 
