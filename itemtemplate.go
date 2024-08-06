@@ -30,8 +30,8 @@ func newItemTemplate(index string) *ItemTemplate {
 	}
 }
 
-func (i *ItemTemplate) CreateItem() *item {
-	return &item{
+func (i *ItemTemplate) CreateItem() *Item {
+	return &Item{
 		template: i,
 	}
 }

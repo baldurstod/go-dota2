@@ -6,13 +6,13 @@ import (
 
 type Hero struct {
 	template *HeroTemplate
-	items    map[string]*item
+	items    map[string]*Item
 }
 
 func newHero(template *HeroTemplate) *Hero {
 	return &Hero{
 		template: template,
-		items:    make(map[string]*item),
+		items:    make(map[string]*Item),
 	}
 }
 
@@ -20,8 +20,8 @@ func (h *Hero) GetEntity() string {
 	return h.template.entity
 }
 
-func (h *Hero) EquipItem(index string) (*item, error) {
-	var item *item
+func (h *Hero) EquipItem(index string) (*Item, error) {
+	var item *Item
 	var err error
 	if item, err = CreateItem(index); err != nil {
 		return nil, err
@@ -83,8 +83,8 @@ func (h *Hero) GetModelScale() float32 {
 	return 1.0
 }
 
-func (h *Hero) GetItems() []*item {
-	//itemsPerPersona := map[int][]*item{0: make([]*item, 0)}
+func (h *Hero) GetItems() []*Item {
+	//itemsPerPersona := map[int][]*Item{0: make([]*Item, 0)}
 	persona := 0
 	if item, ok := h.items["persona_selector"]; ok {
 		if id := item.GetPersonaId(); id >= 0 {
@@ -94,7 +94,7 @@ func (h *Hero) GetItems() []*item {
 
 	var exist bool
 
-	ret := make([]*item, 0, 5)
+	ret := make([]*Item, 0, 5)
 	items, exist := itemsPerHero[h.template.entity]
 	if !exist {
 		return ret

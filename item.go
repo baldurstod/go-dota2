@@ -1,44 +1,44 @@
 package dota2
 
-type item struct {
+type Item struct {
 	template *ItemTemplate
 	Style    int
 }
 
-func newItem(template *ItemTemplate) *item {
-	return &item{
+func newItem(template *ItemTemplate) *Item {
+	return &Item{
 		template: template,
 	}
 }
 
-func (item *item) GetIndex() string {
+func (item *Item) GetIndex() string {
 	return item.template.Index
 }
 
-func (item *item) GetName() string {
+func (item *Item) GetName() string {
 	return item.template.Name
 }
 
-func (item *item) GetItemSlot() string {
+func (item *Item) GetItemSlot() string {
 	return item.template.ItemSlot
 }
 
-func (item *item) GetModelPlayer() string {
+func (item *Item) GetModelPlayer() string {
 	return item.template.ModelPlayer
 }
 
-func (item *item) IsUsedByHero(hero string) bool {
+func (item *Item) IsUsedByHero(hero string) bool {
 	return item.template.IsUsedByHero(hero)
 }
 
-func (item *item) GetAssetModifiers() []*AssetModifier {
+func (item *Item) GetAssetModifiers() []*AssetModifier {
 	return item.template.GetAssetModifiers(item.Style)
 }
 
-func (item *item) GetPersonaId() int {
+func (item *Item) GetPersonaId() int {
 	return item.template.GetPersonaId()
 }
 
-func (item *item) GetSkin() int {
+func (item *Item) GetSkin() int {
 	return item.template.GetSkin(item.Style)
 }
