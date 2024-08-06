@@ -20,7 +20,7 @@ func (h *Hero) GetEntity() string {
 	return h.template.entity
 }
 
-func (h *Hero) EquipItem(index string) (*Item, error) {
+func (h *Hero) EquipItem(index string, replaceExisting bool) (*Item, error) {
 	var item *Item
 	var err error
 	if item, err = CreateItem(index); err != nil {
@@ -31,7 +31,13 @@ func (h *Hero) EquipItem(index string) (*Item, error) {
 		return nil, errors.New("item is not equipable by this hero")
 	}
 
-	h.items[item.GetItemSlot()] = item
+	if replaceExisting {
+		h.items[item.GetItemSlot()] = item
+	} else {
+		if _, ok := h.items[item.GetItemSlot()]; !ok {
+			h.items[item.GetItemSlot()] = item
+		}
+	}
 
 	return item, nil
 }

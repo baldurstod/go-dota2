@@ -108,7 +108,7 @@ func TestHeroItems(t *testing.T) {
 	}
 
 	printHero(h)
-	h.EquipItem("19205")
+	h.EquipItem("19205", true)
 	printHero(h)
 }
 
@@ -131,7 +131,7 @@ func TestWrongHero(t *testing.T) {
 		return
 	}
 
-	if _, err = h.EquipItem("19205"); err == nil { // try to equip Conduit of the Blueheart
+	if _, err = h.EquipItem("19205", true); err == nil { // try to equip Conduit of the Blueheart
 		t.Error("EquipItem should return an error")
 		return
 	}
@@ -150,7 +150,7 @@ func TestHeroModel(t *testing.T) {
 	}
 
 	m1 := h.GetModel()
-	h.EquipItem("19205") // cm persona
+	h.EquipItem("19205", true) // cm persona
 	m2 := h.GetModel()
 
 	if m1 != "models/heroes/crystal_maiden/crystal_maiden.vmdl" {
@@ -178,7 +178,7 @@ func TestItemSkin(t *testing.T) {
 		return
 	}
 
-	item, err := h.EquipItem("13670")
+	item, err := h.EquipItem("13670", true)
 	if err != nil {
 		t.Error(err)
 		return
