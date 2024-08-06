@@ -1,6 +1,8 @@
 package dota2
 
-import "errors"
+import (
+	"errors"
+)
 
 type Hero struct {
 	template *HeroTemplate
@@ -55,6 +57,30 @@ func (h *Hero) GetModel() string {
 	*/
 
 	return model
+}
+
+func (h *Hero) GetSkin() int {
+	for _, item := range h.items {
+		for _, modifier := range item.GetAssetModifiers() {
+			if modifier.Type == MODIFIER_MODEL_SKIN {
+				return modifier.Skin
+			}
+		}
+	}
+
+	return 0
+}
+
+func (h *Hero) GetModelScale() float32 {
+	for _, item := range h.items {
+		for _, modifier := range item.GetAssetModifiers() {
+			if modifier.Type == MODIFIER_HERO_SCALE {
+				return modifier.ModelScale
+			}
+		}
+	}
+
+	return 1.0
 }
 
 func (h *Hero) GetItems() []*item {
