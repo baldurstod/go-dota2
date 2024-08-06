@@ -9,6 +9,8 @@ type AssetModifier struct {
 	Modifier     string  `json:"modifier,omitempty"`
 	Asset        string  `json:"asset,omitempty"`
 	Style        int     `json:"style,omitempty"`
+	Skin         int     `json:"skin,omitempty"`
+	Level        int     `json:"level,omitempty"`
 	Persona      int     `json:"persona,omitempty"`
 	ModelScale   float32 `json:"model_scale,omitempty"`
 	VersusScale  float32 `json:"versus_scale,omitempty"`
@@ -22,6 +24,8 @@ func (am *AssetModifier) initFromData(data *vdf.KeyValue) error {
 	am.Modifier, _ = data.GetString("modifier")
 	am.Asset, _ = data.GetString("asset")
 	am.Style, _ = data.GetInt("style")
+	am.Skin, _ = data.GetInt("skin")
+	am.Level, _ = data.GetInt("level")
 	am.Persona, _ = data.GetInt("persona")
 	if am.ModelScale, err = data.GetFloat32("ModelScale"); err != nil {
 		am.ModelScale = 1
@@ -60,4 +64,7 @@ const (
 	MODIFIER_RESPONSE_CRITERIA             = "response_criteria"
 	MODIFIER_ICON_REPLACEMENT_HERO         = "icon_replacement_hero"
 	MODIFIER_ICON_REPLACEMENT_HERO_MINIMAP = "icon_replacement_hero_minimap"
+	MODIFIER_BUFF_MODIFIER                 = "buff_modifier"
+	MODIFIER_CUSTOM_KILL_EFFECT            = "custom_kill_effect"
+	MODIFIER_ARCANA_LEVEL                  = "arcana_level"
 )
