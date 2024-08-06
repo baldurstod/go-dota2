@@ -23,7 +23,9 @@ func (am *AssetModifier) initFromData(data *vdf.KeyValue) error {
 	am.Type, _ = data.GetString("type")
 	am.Modifier, _ = data.GetString("modifier")
 	am.Asset, _ = data.GetString("asset")
-	am.Style, _ = data.GetInt("style")
+	if am.Style, err = data.GetInt("style"); err != nil {
+		am.Style = -1
+	}
 	am.Skin, _ = data.GetInt("skin")
 	am.Level, _ = data.GetInt("level")
 	am.Persona, _ = data.GetInt("persona")
@@ -67,4 +69,6 @@ const (
 	MODIFIER_BUFF_MODIFIER                 = "buff_modifier"
 	MODIFIER_CUSTOM_KILL_EFFECT            = "custom_kill_effect"
 	MODIFIER_ARCANA_LEVEL                  = "arcana_level"
+	MODIFIER_INVENTORY_ICON                = "inventory_icon"
+	MODIFIER_CHATWHEEL                     = "chatwheel"
 )

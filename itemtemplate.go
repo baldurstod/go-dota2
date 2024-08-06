@@ -111,7 +111,7 @@ func (i *ItemTemplate) GetAssetModifiers(style int) []*AssetModifier {
 
 	if i.Visuals != nil {
 		for _, modifier := range i.Visuals.AssetModifiers {
-			if modifier.Style == style {
+			if modifier.Style == -1 || modifier.Style == style {
 				modifiers = append(modifiers, modifier)
 
 			}
