@@ -11,6 +11,7 @@ func createItems() map[string]*ItemTemplate {
 }
 
 var items = createItems()
+var itemsByName = createItems()
 var itemsPerHero = func() map[string][]*ItemTemplate { return make(map[string][]*ItemTemplate) }()
 var prefabs = createItems()
 
@@ -56,6 +57,7 @@ func initItems(datas *vdf.KeyValue) error {
 		}
 
 		items[item.Index] = item
+		itemsByName[item.Name] = item
 	}
 	return nil
 }
@@ -108,6 +110,14 @@ func GetItemTemplate(index string) (*ItemTemplate, error) {
 	}
 
 	return nil, errors.New("item not found " + index)
+}
+
+func GetItemTemplateByName(name string) (*ItemTemplate, error) {
+	if template, ok := itemsByName[name]; ok {
+		return template, nil
+	}
+
+	return nil, errors.New("item not found " + name)
 }
 
 /*
