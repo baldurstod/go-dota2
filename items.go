@@ -102,6 +102,14 @@ func GetItemTemplates() map[string]*ItemTemplate {
 	return items
 }
 
+func GetItemTemplate(index string) (*ItemTemplate, error) {
+	if template, ok := items[index]; ok {
+		return template, nil
+	}
+
+	return nil, errors.New("item not found " + index)
+}
+
 /*
 func GetBaseItems(hero string) []*Item {
 	i := make([]*Item, 0, 10)
