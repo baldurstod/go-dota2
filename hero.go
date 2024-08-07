@@ -21,11 +21,21 @@ func (h *Hero) GetEntity() string {
 }
 
 func (h *Hero) EquipItem(index string, replaceExisting bool) (*Item, error) {
-	var item *Item
+	var template *ItemTemplate
 	var err error
-	if item, err = CreateItem(index); err != nil {
+	if template, err = GetItemTemplate(index); err != nil {
 		return nil, err
 	}
+	return h.equipItem(template, replaceExisting)
+}
+
+func (h *Hero) equipItem(template *ItemTemplate, replaceExisting bool) (*Item, error) {
+	if len(template.Bundle) > 0 {
+		_, err := h.equipBundle(template, replaceExisting)
+		return nil, err
+	}
+
+	item := newItem(template)
 
 	if !item.IsUsedByHero(h.template.entity) {
 		return nil, errors.New("item is not equipable by this hero")
@@ -36,10 +46,45 @@ func (h *Hero) EquipItem(index string, replaceExisting bool) (*Item, error) {
 	} else {
 		if _, ok := h.items[item.GetItemSlot()]; !ok {
 			h.items[item.GetItemSlot()] = item
+		} else {
+			return nil, errors.New("slot already occupied")
 		}
 	}
 
 	return item, nil
+}
+
+func (h *Hero) EquipBundle(index string, replaceExisting bool) ([]*Item, error) {
+	var template *ItemTemplate
+	var err error
+	if template, err = GetItemTemplate(index); err != nil {
+		return nil, err
+	}
+
+	return h.equipBundle(template, replaceExisting)
+}
+
+func (h *Hero) equipBundle(template *ItemTemplate, replaceExisting bool) ([]*Item, error) {
+	var items []*Item
+	if len(template.Bundle) == 0 {
+		return nil, errors.New("not a bundle")
+	}
+
+	var t *ItemTemplate
+	var err error
+	var item *Item
+	for name := range template.Bundle {
+		if t, err = GetItemTemplateByName(name); err != nil {
+			return nil, err
+		}
+
+		if item, err = h.equipItem(t, replaceExisting); err != nil {
+			return nil, err
+		}
+		items = append(items, item)
+	}
+
+	return items, nil
 }
 
 // Get hero model depending on the equipped items

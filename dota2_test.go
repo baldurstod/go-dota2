@@ -187,3 +187,23 @@ func TestItemSkin(t *testing.T) {
 	item.Style = 1
 	printHero(h)
 }
+
+func TestEquipBundle(t *testing.T) {
+	if err := initAll(); err != nil {
+		t.Error(err)
+		return
+	}
+
+	h, err := dota2.GetHero("npc_dota_hero_razor")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	_, err = h.EquipItem("23100", true)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	printHero(h)
+}
