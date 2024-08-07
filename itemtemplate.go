@@ -20,6 +20,7 @@ type ItemTemplate struct {
 	Prefab         string          `json:"prefab,omitempty"`
 	BaseItem       bool            `json:"base_item,omitempty"`
 	UsedByHeroes   map[string]bool `json:"used_by_heroes,omitempty"`
+	Bundle         map[string]bool `json:"bundle,omitempty"`
 	Visuals        *Visuals        `json:"visuals,omitempty"`
 }
 
@@ -27,6 +28,7 @@ func newItemTemplate(index string) *ItemTemplate {
 	return &ItemTemplate{
 		Index:        index,
 		UsedByHeroes: make(map[string]bool),
+		Bundle:       make(map[string]bool),
 	}
 }
 
@@ -91,6 +93,14 @@ func (i *ItemTemplate) initFromData(data *vdf.KeyValue) error {
 		for _, hero := range usedByHeroes.GetChilds() {
 			if b, _ := hero.ToBool(); b {
 				i.UsedByHeroes[hero.Key] = true
+			}
+		}
+	}
+
+	if bundle, err := data.Get("bundle"); err == nil {
+		for _, name := range bundle.GetChilds() {
+			if b, _ := name.ToBool(); b {
+				i.Bundle[name.Key] = true
 			}
 		}
 	}
