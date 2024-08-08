@@ -98,6 +98,7 @@ func (i *ItemTemplate) initFromData(data *vdf.KeyValue) error {
 	}
 
 	if bundle, err := data.Get("bundle"); err == nil {
+		i.ItemSlot = "bundle"
 		for _, name := range bundle.GetChilds() {
 			if b, _ := name.ToBool(); b {
 				i.Bundle[name.Key] = true

@@ -30,11 +30,6 @@ func (h *Hero) EquipItem(index string, replaceExisting bool) (*Item, error) {
 }
 
 func (h *Hero) equipItem(template *ItemTemplate, replaceExisting bool) (*Item, error) {
-	if len(template.Bundle) > 0 {
-		_, err := h.equipBundle(template, replaceExisting)
-		return nil, err
-	}
-
 	item := newItem(template)
 
 	if !item.IsUsedByHero(h.template.entity) {
@@ -91,7 +86,8 @@ func (h *Hero) equipBundle(template *ItemTemplate, replaceExisting bool) ([]*Ite
 func (h *Hero) GetModel() string {
 	model := h.template.model
 
-	for _, item := range h.items {
+	items := h.GetItems()
+	for _, item := range items {
 		for _, modifier := range item.GetAssetModifiers() {
 			if modifier.Type == MODIFIER_ENTITY_MODEL && modifier.Asset == h.template.entity {
 				model = modifier.Modifier
@@ -144,6 +140,8 @@ func (h *Hero) GetItems() []*Item {
 	}
 
 	var exist bool
+	var slot ItemSlot
+	slots := make(map[string]*Item)
 
 	ret := make([]*Item, 0, 5)
 	items, exist := itemsPerHero[h.template.entity]
@@ -151,17 +149,49 @@ func (h *Hero) GetItems() []*Item {
 		return ret
 	}
 
-	for _, item := range h.items {
-		ret = append(ret, item)
+	// First, we add equipped items
+	for slot, item := range h.items {
+		if slot != "bundle" {
+			ret = append(ret, item)
+			slots[item.template.ItemSlot] = item
+		}
 	}
 
-	var slot ItemSlot
+	// Second, we add bundle items, if any
+	if item, ok := h.items["bundle"]; ok {
+		var itemTemplate *ItemTemplate
+		var err error
+		for name := range item.template.Bundle {
+
+			if itemTemplate, err = GetItemTemplateByName(name); err != nil {
+				continue
+			}
+
+			if _, exist = h.items[itemTemplate.ItemSlot]; exist {
+				continue
+			}
+
+			if slot, exist = h.template.itemSlots[itemTemplate.ItemSlot]; !exist {
+				continue
+			}
+
+			if !slot.IsPersonaSlot(persona) {
+				continue
+			}
+
+			item := newItem(itemTemplate)
+			ret = append(ret, item)
+			slots[itemTemplate.ItemSlot] = item
+		}
+
+	}
+
 	for _, itemTemplate := range items {
 		if !itemTemplate.BaseItem {
 			continue
 		}
 
-		if _, exist = h.items[itemTemplate.ItemSlot]; exist {
+		if _, exist = slots[itemTemplate.ItemSlot]; exist {
 			continue
 		}
 

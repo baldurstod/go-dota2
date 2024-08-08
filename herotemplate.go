@@ -62,6 +62,8 @@ func (h *HeroTemplate) initFromData(data *vdf.KeyValue) error {
 		}
 	}
 
+	h.itemSlots["bundle"] = ItemSlot{SlotIndex: -1, SlotName: "bundle", SlotText: "Bundle"}
+
 	return nil
 }
 
